@@ -1,15 +1,25 @@
 # **ADC-TSLIB-电阻式触摸屏调试**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 上一节已经将TFT LCD调通，这块LCD表面带了一块四线电阻式触摸屏。
@@ -28,23 +38,26 @@ QQ群：767214262
 12位ADC是逐次趋近型模数转换器。它具有多达19个复用通道，可测量来自16个外部源、两个内部源和VBAT通道的信号。这些通道的A/D转换可在单次、连续、扫描或不连续采样模式下进行。ADC的结果存储在一个左对齐或右对齐的16位寄存器中。
 #### 特性
 STM32的ADC功能强大，主要特性如下：
-![ADC特性](pic/adc特性.jpg)
+![ADC特性](pic/pic1.jpg)
 本次我们只会用到最简单的单次转换功能。
 
 #### 框图
 
-![ADC框图](pic/adc框图.jpg)
+![ADC框图](pic/pic2.jpg)
 从框图可以看出：
+
 1. 有两种触发：注入组、规则组。所谓的注入组，就像中断，可以打断规则组的转换。
 2. 支持DMA和中断。
 3. 左边输入多达16路。
 
 在屋脊雀STM32F407硬件，使用PB0跟PB1作为ADC转换输入。
 **查数据手册可知PB0是ADC12_IN8，PB1是ADC12_IN9**。
-![PB口](pic/PB口.jpg)
+![PB口](pic/pic3.jpg)
+
 ## 电阻触摸屏
 四线电阻屏部分内容参考网络文章电阻式触摸屏的基本结构和驱动原理，网址
 http://article.cechina.cn/2009-03/200937110119.htm
+
 >四线电阻式触摸屏的结构如图1，在玻璃或丙烯酸基板上覆盖有两层透平，均匀导电的ITO层，分别做为X电极和Y电极，它们之间由均匀排列的透明格点分开绝缘。其中下层的ITO与玻璃基板附着，上层的ITO附着在PET薄膜上。X电极和Y电极的正负端由“导电条”（图中黑色条形部分）分别从两端引出，且X电极和Y电极导电条的位置相互垂直。引出端X-，X+，Y-，Y+一共四条线，这就是四线电阻式触摸屏名称的由来。
 ![触摸屏原理1][1]
 当有物体接触触摸屏表面并施以一定的压力时，上层的ITO导电层发生形变与下层ITO发生接触，如下图2：
@@ -54,6 +67,7 @@ http://article.cechina.cn/2009-03/200937110119.htm
 
 我们将图三转化为原理图
 ![触摸屏等效电路原理图][4]
+
 >1. 在Y+加上VCC，Y-接地，不同的触摸点，R_Y+与R_Y-的分压就不一样，通过X+或者X-，就可以检测出Y轴上的分压值。
 >2. 在X+加上VCC，X-接地，不同的触摸点，R_X+与R_X-的分压就不一样，通过Y+或者Y-，就可以检测出X轴上的分压值。
 >3. 在X+加上VCC，Y+接地，不同的触摸压力，R_touch阻值不一样，压力越大，阻值越小，通过X-和Y-，就可以检测出R_TOUCH两端的分压值。
@@ -64,6 +78,7 @@ http://article.cechina.cn/2009-03/200937110119.htm
 ![屋脊雀触摸屏电路][5]
 上图为我们使用的LCD上的触摸屏处理电路路。
 使用了一片74HC4052“两路四选一模拟开关”作为电子开关，用于切换触摸屏四根线连接到哪里：电压、地、ADC。
+
 >TP-X-、TP-X+、TP-Y-、TP-Y+就是电阻屏的四根线。
 ADC-TPX、ADC-TPY则为两个ADC的输入信号。
 TP-S0、TP-S1为电子开关选择信号。
@@ -99,6 +114,7 @@ https://github.com/kergoth/tslib
 在网络有一篇文章对TSLIB的工作流程做了分析
 http://blog.csdn.net/evilcode/article/details/7493704
 一些关键信息如下：
+
 >pthres 为Tslib 提供的触摸屏灵敏度门槛插件；
 variance 为Tslib 提供的触摸屏滤波算法插件；
 dejitter 为Tslib 提供的触摸屏去噪算法插件；
@@ -111,7 +127,8 @@ raw device --> pthres --> variance --> dejitter --> linear --> application
 
 ## 驱动程序设计
 触摸屏程序架构如下：
-![驱动架构](pic/驱动架构.jpg)
+![驱动架构](pic/pic4.jpg)
+
 1. 蓝色是应用层。主要就是TSLIB库。
 2. 褐色是接口封装层，主要功能是将两种不同的驱动方案封装统一接口。
 触摸屏接口设计如下：
@@ -656,9 +673,10 @@ s32 dev_ts_adc_task(u16 dac_value)
 >这段代码跟前面原理分析一致，大家好好体会整个处理过程。
 
 #### 与TSLIB联合
-![tslib参与编译的文件](pic/tslib编译文件.jpg)
+![tslib参与编译的文件](pic/pic5.jpg)
 stm32-raw.c是tslib跟dev_touchscreen.c的接口文件。
 ts_input_read函数调用dev_touchscreen_read函数读取样点。
+
 ```c
 static int ts_input_read(struct tslib_module_info *inf,
 			 struct ts_sample *samp, int nr)
@@ -728,7 +746,7 @@ static int ts_input_read(struct tslib_module_info *inf,
 4. ts_calibrate_test测试。
 
 测试效果如图：
-![测试效果](pic/测试效果.jpg)
+![测试效果](pic/pic6.jpg)
 线条还算流畅。
 ## 总结
 1. 测试中触摸屏还是出现飞点，请分析解决。

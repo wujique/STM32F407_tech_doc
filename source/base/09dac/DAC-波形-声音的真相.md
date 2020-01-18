@@ -1,16 +1,26 @@
 
 # **DAC-波形-声音的真相**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 
@@ -28,14 +38,14 @@ DAC是数字模拟转换器（英语：Digital to analog converter，英文缩�
 ## STM32 DAC
 查看《STM32F4xx中文参考手册.pdf》
 STM32F4系列DAC功能特性如下：
-![DAC特性](pic/DAC特性.png)
+![DAC特性](pic/pic1.png)
 
 功能框图如下，从图可以看出：
 * DAC可以用软件触发、定时器触发、外部IO触发。
 * DAC可以有DMA。
 * 最下方的数模转换器，在控制逻辑控制之下，根据输入电压，在DAC_OUT上输出DAC电压。
 
-![DAC通道框图](pic/DAC通道框图.png)
+![DAC通道框图](pic/pic2.png)
 硬件上使用PA5作为DAC输出测试。
 在《STM32F407_数据手册.pdf》管脚描述表格中有说明PA5是DAC2的输出管脚。
 ![PA5DAC](pic/PA5DAC.png)

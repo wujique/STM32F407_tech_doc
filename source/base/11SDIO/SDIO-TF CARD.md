@@ -1,16 +1,26 @@
 
 # **SDIO-TF CARD**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 
@@ -28,10 +38,10 @@ SD卡使用SDIO口通信过程遵循SD卡规范，这个规范不简单，涉及
 SDIO：安全数字输入输出接口。
 STM32F407，原生支持。
 关于SDIO接口，在《STM32F4xx中文参考手册.pdf》文档有说明。
-![特性](pic/SDIO特性.png)
+![特性](pic/pic4.png)
 
 下图是SDIO框图，
-![框图](pic/SDIO框图.png)
+![框图](pic/pic3.png)
 
 这是一个总框图，主要说明外部连接。
 对于SDIO适配器，并没有详细说明。我猜测原因是，其实SDIO是一个比较复杂的设备，类似USB。
@@ -45,25 +55,28 @@ STM32F407，原生支持。
 ## SDIO接口存储卡
 常见的卡有下面两种
 SD 卡，俗称大卡。
+
 >SD卡是由松下电器、东芝和SanDisk联合推出，1999年8月发布。
 
-![SD卡](pic/SD卡.png)
+![SD卡](pic/pic5.png)
 TF卡，俗称小卡，2004年标准协会更名为micro SD卡。
-![TF卡](pic/TF卡.png)
+![TF卡](pic/pic6.png)
 
 其实在SD卡之前，最先出现的是MMC卡。
 下图这种就是MMC卡，只有SD卡一半大小，通常我们都用一个卡尾拼成SD卡用。
 >MMC(Multi-Media Card，多媒体卡)由西门子公司Siemens和SanDisk于1997年推出。
 
-![MMC卡](pic/MMC卡.png)
+![MMC卡](pic/pic2.png)
 
 这些卡的协议基本都是兼容的。具体可以看我们资料包中提供的文档。
 大部分文档是sandisk和SD卡协会编写的。
-![协议资料](pic/协议资料.png)
+![协议资料](pic/pic7.png)
 话说这些资料全英文，一时半会儿看不懂。
+
 ## 原理图
 屋脊雀4074开发板选用TF卡座，减少体积，这也是当前电子产品的趋势。
-![原理图](pic/原理图.jpg)
+![原理图](pic/pic1.jpg)
+
 >SDIO接口使用6根管脚。
 CLK是通信时钟
 CMD是命令串行通信线。

@@ -1,16 +1,26 @@
 
 # **SPI-SPI FLASH**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 
@@ -30,8 +40,9 @@ https://baike.baidu.com/item/SPI%E6%8E%A5%E5%8F%A3/2527392
 ## STM32 SPI控制器
 *在《STM32F4xx中文参考手册.pdf》“27 串行外设接口 (SPI)”章节有详细说明*。
 STM32的SPI控制器框图如下：
-![SPI控制器](pic/STM32SPI框图.png)
+![SPI控制器](pic/pic1.png)
 从中可以看出：
+
 >1 移位寄存器只有一个，因为接受和发送是同时进行的。发送从右边出去，接收从左边进来。
 >2 4根引脚，MOSI、MISO、SCK、NSS（CS）
 
@@ -53,7 +64,7 @@ SPI的大概工作过程就是：
 通俗的说，如果是1，就在时钟的第二个边沿采样。
 如果是0，就在时钟的第一个边沿采样。
 
-![时钟图](pic/时钟图.png)
+![时钟图](pic/pic4.png)
 
 从上图也可以看到一个标准的SPI通信时序是怎么样的。
 主设备输出时钟，并在MOSI上输出数据。
@@ -93,6 +104,7 @@ SPI的大概工作过程就是：
 上图是读数据，与读状态不同的是，CPU要多发送24bit地址。
 在FLASH的规格书中，图29说明了如何编程和擦除，其实也就是前面命令时序的组合。
 ![SPI falsh擦除流程](pic/11.png)
+
 7. 规格书最后就是一些性能参数，封装等信息了。基本与编程无关。
 8. 除了以上特性之外，所有FLASH都共一个特性：
 **FLASH上用于存储数据的每一个BIT，只能由1改写为0。**
@@ -104,9 +116,9 @@ SPI的大概工作过程就是：
 ## 原理图
 屋脊雀F407硬件在底板和核心板上，各配置了一片SPI FLASH。
 底板配置的是MX25L3206EM2I，底板的电路在SPI信号上进行了阻容滤波处理。
-![底板SPIFLASH原理图](pic/底板SPIFLASH原理图.png)
+![底板SPIFLASH原理图](pic/pic2.png)
 核心板配置的是W25Q64FVSI(或JVSI)，核心板FLASH离CPU较近，没有加阻容滤波处理，这样也能减少空间，毕竟核心板器件还是比较密集。
-![核心板SPIFLASH原理图](pic/核心板SPIFLASH原理图.jpg)
+![核心板SPIFLASH原理图](pic/pic3.jpg)
 **这两个SPI FLASH都是接在SPI3控制器上，SPI3控制器还是外扩接口的SPI控制器，也即是说，一个SPI上可能接有3个设备或更多。**
 为什么要配置两片SPI FALSH？当然不是堆硬件，是为了模拟一个情景：**多个SPI总线上挂载多个器件**，如果你写的SPI跟SPI FLASH驱动不能适应这样的场景，我觉得不是一个好程序。我们提供的源码，就是要处理这种情况。
 

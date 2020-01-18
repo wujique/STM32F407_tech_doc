@@ -1,39 +1,51 @@
 
 # **定时器-PWM-蜂鸣器**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 
 上一章节我们调试了定时器定时功能。现在我们调试定时器输出PWM功能。
 ## PWM
 PWM（Pulse Width Modulation）是脉冲宽度调制的缩写。
-![PWM波形](pic/PWM波形.jpg)
+![PWM波形](pic/pic1.jpg)
 简单的说就是高低电平不断切换。在流水灯章节我们曾经提过。
 一个高低电平切换就是一个**周期**，在一个周期内，高电平持续时间占周期的百分比就是常说的**占空比**。
 PWM常用于控制灯光和电机。通常占空比越大，电机转速越快，LED越亮（高电平驱动方式）。
+
 ## 原理图
 本次我们使用一个固定频率的50%占空比PWM驱动一个电磁式蜂鸣器。
-![蜂鸣器电路](pic/蜂鸣器电路.jpg)
+![蜂鸣器电路](pic/pic2.jpg)
 蜂鸣器选用贴片电磁式，参数如下，从表中可以看到，只要我们输出一个4000Hz的频率，就能驱动蜂鸣器。
-![蜂鸣器参数](pic/电磁式蜂鸣器参数.jpg)
+![蜂鸣器参数](pic/pic3.jpg)
 
 ## STM32定时器PWM
 蜂鸣器beep接在PD13，在数据手册《STM32F407_数据手册.pdf》中可查到，**PD13是TIM4的CH2，因此要在这个IO上输出PWM，需要用定时器4，并且是在通道2上输出**。
 ![定时器PWM](pic/1.png)
 上一节我们看过定时器的框图，做PWM功能，需要用到的功能比定时多了输出控制部分。
 也就是下图右下角的大红框中的内容。
-![定时器框图](pic/定时器框图.JPG)
+![定时器框图](pic/pic4.jpg)
 如何使用定时器4在PD13上输出4KHz的PWM？我们通过代码讲解。
+
 ## 编码
 在board_dev文件夹创建两个新文件dev_buzzer.c、dev_buzzer.h，将这两个文件夹添加到工程。
 #### IO口初始化
@@ -106,7 +118,7 @@ void mcu_tim4_pwm_init(u32 arr,u32 psc)
 20-23行，执行配置，这个地方要注意，不同的输出通道设置，需要使用不同的函数：
 我们用的是通道2，那么用的就是TIM_OC2Init、TIM_SetCompare2、TIM_OC2PreloadConfig。
 在库文件中可以看到下面这些函数，定时器有4个通道，就有4套配置函数。
-![定时器输出设置函数](pic/输出设置函数.png)
+![定时器输出设置函数](pic/pic5.png)
 
 IO口和定时器都配置好后，只要启动定时器，就可以输出PWM了。
 

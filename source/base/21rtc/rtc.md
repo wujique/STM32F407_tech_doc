@@ -1,15 +1,25 @@
 # **RTC**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 本章我们调试STM32F407的内置实时时钟(RTC)，同时介绍与RTC相关的BKP功能。
@@ -28,13 +38,13 @@ RTC通常有以下特点：
 4. 时钟32.768K
 
 ## STM32 RTC
-![](pic/stm32_rtc.png)
+![](pic/pic2.png)
 
 #### 框图
-![](pic/RTC框图.png)
+![](pic/pic1.png)
 
 #### 特性
-![](pic/特性.png)
+![](pic/pic3.png)
 #### 备份寄存器BKP
 
 >细节在<23.3.13 入侵检测>

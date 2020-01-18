@@ -1,15 +1,25 @@
 # VSPI控制COG LCD & I2C控制OLED
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 上一节我们已经点亮了COG LCD跟OLED LCD，用的是外扩SPI。
@@ -172,7 +182,7 @@ LCD显示 —— SSD1565驱动——SPI LCD接口——SPI驱动
 
 1. LCD驱动已经能支持我们的外扩3种接口。
 请问：
-  TFT 8080接口是否能用这种封装？
+    TFT 8080接口是否能用这种封装？
 
 2. 现在的代码，同时只能支持一个硬件设备。具体用什么设备，在dev_lcd_init中选，用什么总线，通过LcdBusDrv指针选。
 如果需要同时使用，怎么办？比如8080，VSPI,I2C,SPI，四个接口全部接上LCD。
@@ -180,7 +190,6 @@ LCD显示 —— SSD1565驱动——SPI LCD接口——SPI驱动
 **请看下一节。**
 
 **本节例程代码，只是给大家参考，如果设计项目使用，建议用屋脊雀在github上的最新代码架构**
-
 
 ---
 end

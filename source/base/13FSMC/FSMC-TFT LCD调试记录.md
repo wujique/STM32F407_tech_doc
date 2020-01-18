@@ -1,16 +1,26 @@
 
 # **FSMC-TFT LCD调试记录**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190402
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 电子设备人机交互包含输入输出，液晶显示是输出主要方法。
@@ -21,7 +31,7 @@ QQ群：767214262
 ## LCD液晶屏
 >tft-lcd是薄膜晶体管液晶显示器英文thin film transistor-liquid crystal display的缩写。
 
-![TFT LCD](pic/首图白.jpg)
+![TFT LCD](pic/pic1.jpg)
 
 本次调试的是屋脊雀设计的模块
 >带四线电阻触摸屏
@@ -81,8 +91,9 @@ RGB
 262K色
 
 在第9页有9341这颗芯片的框图
-![9341框图](pic/9341框图.png)
+![9341框图](pic/pic2.png)
 主要有以下说明：
+
 1. 左上红框1，说明这颗IC支持多种通信接口，RGB接口、串口、MCU接口。
 其中MCU接口就是我们常说的并口，通常是6800或8800时序。
 但是模组用什么接口，支持什么接口，不同厂家设计的不一样。
@@ -109,9 +120,11 @@ RGB
 ![RGB565](pic/RGB565.png)
 看上图，第0个字节只有低8位有效，这个字节是命令。
 从第1个字节开始，就是显示数据，每个数据16位，从高位到低位分3部分:红色数据5bit、绿色数据6bit、蓝色数据5bit。
+
 #### 显示流程
 通常显示流程如下图。
-![显示流程](pic/显示流程.png)
+![显示流程](pic/pic3.png)
+
 1. 初始化包括硬件复位和LCD控制初始化，初始化流程比较复杂，通常由模组厂家提供。
 2. 设置扫描方向，当持续刷新显示数据时，控制器自动移动GRAM指针的方向。
 有两个：page和colum.
@@ -125,7 +138,7 @@ RGB
 1. 设置扫描方向
 9341使用36H命令控制扫描方向。简单说就是连续读写GRAM时，GRAM指针增长方向。
 在8.2.29有命令说明，其中关键的是MY/MX/MV：这3个bit控制memory读写方向。
-![36命令](pic/36命令.png)
+![36命令](pic/pic4.png)
 
 2. 设置column范围
 2AH命令设置column范围，SC是column起始，EC就是结束。
@@ -134,13 +147,13 @@ RGB
 那可设范围是多大呢？请看下面。
 根据MADCTL第5个BIT，column不能超过0xEF/0x13f。也就是不能超过239/319。
 啥意思？也就是**意味着，可以通过MADCTL第5个BIT调换column和page**。
-![2A命令](pic/SC范围.png)
+![2A命令](pic/pic8.png)
 
 3. 设置page范围
 2BH命令设置page范围，SP是page起始地址，EP是page结束地址。
 ![2B命令](pic/PAGE.png)
 2B命令和2A命令类似。
-![2B命令](pic/PAGE范围.png)
+![2B命令](pic/pic5.png)
 
 **很多人说这两个命令时用于设置扫描起始地址，这是不对的。这两个命令时用于设置扫描窗口范围。当设置窗口时，起始地址默认为(sc,sp)**
 
@@ -191,7 +204,7 @@ RS接在FSMC_A15上，那么在地址线上，我们希望的信号是A15出现0
 更多FSMC信息，例如寄存器使用、总线时序等，请参考芯片参考手册，同时分析源码。
 ## 原理图
 - 接口
-![原理图](pic/FSMC接口.jpg)
+![原理图](pic/pic6.jpg)
 >1脚背光电源（5V），
 2脚背光控制
 3脚LCD复位信号
@@ -205,7 +218,7 @@ RS接在FSMC_A15上，那么在地址线上，我们希望的信号是A15出现0
 29 RD，从TFTLCD 读取数据。
 
 - Lcd原理图
-![原理图](pic/液晶原理图.jpg)
+![原理图](pic/pic7.jpg)
 上图只是LCD的原理图，不包含触摸屏控制。
 左边信号是控制信号。右边是电源和背光。
 我们用的LCD默认就是16BIT并口了，不需要IM选择。

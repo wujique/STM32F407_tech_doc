@@ -1,16 +1,26 @@
 
 # **I2C-收音机-功放**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 前面已经调试了IO口，定时器，串口。本章节我们调试I2C。
@@ -21,6 +31,7 @@ QQ群：767214262
 关于I2C接口，看文档《I2C总线协议.pdf》，周立功写的。
 在第12页有一个时序图如下图，我们就从这个图了解I2C。
 ![I2C时序](pic/1.png)
+
 >1. I2C通信使用两根线SDA和SCL，SCL是时钟线，SDA是数据线，控制时钟的是主机。
 >2. I2C通信过程看图底部英文标识：
 （1）首先发送`起始信号START`，然后发送`地址ADDRESSS`，接着是`读写位R/W`，主机释放SDA线，从机使用SDA线返回`应答位ACK`。
@@ -45,9 +56,9 @@ TEA5767的功能，通过他的寄存器了解。
 ## 原理图
 TEA5767模块通过I2C接口控制，输出双声道信号。天线使用3.5插卡音箱拉杆天线。
 收音功能对电源要求较高，在电源端安排了一个100UF的钽电容，电源跟地串了磁珠。I2C信号线也串了100R电阻。
-![TEA5767电路](pic/TEA5767电路.png)
+![TEA5767电路](pic/pic2.png)
 TEA5767输出声音信号只有20多mv左右，不能直接推动喇叭，需要功放放大，我们使用的功放是TDA2822。
-![运放电路](pic/运放电路.jpg)
+![运放电路](pic/pic1.jpg)
 电路使用TDA2822桥接方式，放大倍数较大。
 输入端使用电阻分压，降低输入信号，防止放大过渡。
 除了FM信号，另外一路DAC_SOUND也使用功放，通过拨动开关选择哪路音频信号输入到功放。
@@ -206,7 +217,6 @@ TEA的操作主要是寻台，提供两个函数dev_tea5767_auto_search和dev_te
 要有一点面向对象思想，I2C控制器是一个对象，I2C设备是一个对象。
 更重要的是，I2C控制器驱动（代码）也是一个对象，I2C设备的驱动（代码）当然也可以认为是一个对象。
 >*GITHUB仓库最新代码已经实现，请自行查阅*
-
 
 ---
 end

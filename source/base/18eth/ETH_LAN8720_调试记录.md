@@ -1,23 +1,33 @@
 # **ETH LAN8720 调试记录**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
-
 
 本节我们开始调试网络功能。
 主要分三部分:STM32以太网控制器、PHY芯片LAN8720、LWIP协议栈。
+
 ## STM32 MAC控制器
 #### 框图
-![](pic/ETH框图.png)
+![](pic/pic1.png)
 1. STM32的以太网是基于DMA控制器的。
 2. 介质访问控制，也就是我们通常说的MAC控制器。这个是以太网功能的核心部分。
 3. 以太网提供3种接口：SMI、MII、RMII。
@@ -42,7 +52,7 @@ RMII有以下特性：
 相同的参考时钟必须从外部提供给MAC和外部PHY
 提供独立的2位宽的发送和接收数据路径
 
-![](pic/RMII接口.png)
+![](pic/pic2.png)
 图中的REF_CLK是共用的参考时钟，50MHz。
 我们用LAN8720方案，这个时钟由LAN8720提供给STM32 MAC控制器。
 
@@ -60,14 +70,14 @@ LAN8720A是低功耗的10/100M以太网PHY芯片，支持通过RMII接口和MAC�
 #### 框图
 * 内部框图
 
-![](pic/框图.png)
+![](pic/pic3.png)
 
 * 应用图
 
 左边10/100M网络控制器就是STM32内部的MAC控制器。
 右边的RJ45就是网口。
 下边框图说明LAN8720需要一个外部晶振。
-![](pic/应用图.png)
+![](pic/pic4.png)
 
 更多请参考《LAN8720A.pdf》文档。
 ## LWIP
@@ -84,13 +94,13 @@ OSI 参考模型将整个网络通信的功能划分为七个层次，见图。
 它们由低到高分别是物理层(PH)、数据链路层(DL)、网络层(N)、传输层(T)、会话层(S)、表示层(P)、应用层(A)。
 每层完成一定的功能，每层都直接为其上层提供服务，并且所有层次都互相支持。
 第四层到第七层主要负责互操作性，而一层到三层则用于创造两个网络设备间的物理连接。
-![](pic/OSI七层模型.jpg)
+![](pic/pic5.jpg)
 
 #### TCP/IP协议
 >Transmission Control Protocol/Internet Protocol的简写，中译名为传输控制协议/因特网互联协议，又名网络通讯协议，是Internet最基本的协议、Internet国际互联网络的基础，由网络层的IP协议和传输层的TCP协议组成。TCP/IP 定义了电子设备如何连入因特网，以及数据如何在它们之间传输的标准。协议采用了4层的层级结构，每一层都呼叫它的下一层所提供的协议来完成自己的需求。通俗而言：TCP负责发现传输的问题，一有问题就发出信号，要求重新传输，直到所有数据安全正确地传输到目的地。而IP是给因特网的每一台联网设备规定一个地址。
 
 TCP/IP协议只使用了4层结构，跟OSI的对应关系如下图。
-![](pic/TCPIP模型.png)
+![](pic/pic6.png)
 
 #### LWIP
 LwIP是Light Weight (轻型)IP协议，有无操作系统的支持都可以运行。
@@ -101,13 +111,13 @@ lwIP协议栈主要关注的是怎么样减少内存的使用和代码的大小�
 #### 学习
 我们本次只是移植官方以太网的例子。不会对LWIP做深入学习。
 因为TCP/IP协议太复杂了。以前公司做无线通信的同事，每天都抗一本书看，对，就是下面这本，他说这书是一套，总共更有3本。
-![](pic/TCPIP详解.png)
+![](pic/pic7.png)
 如果大家想学习网络协议，可以买这个书看看。
 如果只是想了解LWIP的使用，那就先从例程上学习学习，再看看LWIP的结构跟接口就可以了。
 ***以后我们会单独出一个对于LWIP的使用说明***
 
 ## 原理说明
-![原理图](pic/原理图.jpg)
+![原理图](pic/pic8.jpg)
 1. 原理图分两部分：PHY芯片LAN8720A、HR911105A（带变压器RJ45网口）。
 2. PHY芯片通过RMII接口与STM32内部MAC层通信。
 3. LAN8720需要一个25M的晶振。
@@ -124,13 +134,13 @@ Project文件夹内有两个文件夹，FreeRTOS是带操作系统的例程，St
 把例程中src和inc文件夹内的相关文件拷贝到eth。例程的main.c跟main.h改名eth_app。
 
 * C文件
-![原理图](pic/源码C文件.jpg)
+![原理图](pic/pic9.jpg)
 
 * 头文件
-![原理图](pic/源码头文件.jpg)
+![原理图](pic/pic10.jpg)
 
 * 将文件添加到工程
-![原理图](pic/MDK工程文件.jpg)
+![原理图](pic/pic11.jpg)
 lwip文件较多，一共34个。
 lwip-1.4.1\src\api目录下8个。
 lwip-1.4.1\src\core目录下16个。
@@ -293,7 +303,7 @@ void tcp_echoserver_init(void)
 其中第11行代码，将tcp绑定到**端口7**。
 
 我们运行网络调试助手，设置如下图，
-![原理图](pic/echo测试.JPG)
+![原理图](pic/pic12.jpg)
 >协议选择Tcp Client
 IP地址选择开发板获取到的地址
 使用端口7

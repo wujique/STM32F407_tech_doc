@@ -1,15 +1,25 @@
 # **COG LCD & OLED LCD 调试记录**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 前面我们调试过彩屏，彩屏显示效果很好，但是价格高。
@@ -28,20 +38,21 @@ QQ群：767214262
 >COG是Chip On Glass的缩写，就是驱动芯片直接绑定在玻璃上，透明的。
 
 实物如下图：
-![cog](pic/coglcd.JPG)
+![cog](pic/coglcd.jpg)
 显示效果
-![COG显示效果](pic/cog液晶图片.JPG)
+![COG显示效果](pic/pic1.jpg)
 这种LCD通常像素不高，常用的有128X64，128X32。
 一般只支持黑白显示，也有灰度屏。
 接口通常是SPI，I2C。也有号称支持8位并口的，不过基本不会用。3根IO能解决的问题，没必要用8根吧？
 常用的驱动IC：STR7565。
+
 #### OLED lcd
 买过开发板的应该基本用过。新技术，大家都感觉高档，手环智能手表等时尚产品多是用OLED。OLED目前屏幕较小，大一点的都很贵。
 在控制上跟COG LCD类似，区别是两者的显示方式不一样。从程序角度看，最大的差别就是：OLED LCD不用控制背光。
 实物如下图，
-![oled](pic/OLED.JPG)
+![oled](pic/OLED.jpg)
 裸屏
-![裸屏](pic/OLED裸屏.JPG)
+![裸屏](pic/pic2.jpg)
 
 常见的是SPI和I2C接口。
 常见驱动IC：SSD1615。
@@ -51,8 +62,9 @@ QQ群：767214262
 #### 硬件接口
 COG屏跟OLED屏，内置控制器不同，但是基本上都支持I2C，SPI通信。
 这次调试的模块使用SPI通信。
-![1](pic/COGLCD接口.JPG)
+![1](pic/pic3.jpg)
 上图是COG LCD信号
+
 >1脚A0，选择命令或数据通信。
 3脚SDA，相当于SPI的 mosi
 4脚时钟
@@ -60,11 +72,11 @@ COG屏跟OLED屏，内置控制器不同，但是基本上都支持I2C，SPI通�
 6脚复位信号
 9脚背光
 
-![2](pic/OLED接口.jpg)
+![2](pic/pic4.jpg)
 上图是OLED模块接口，跟COG接口是兼容的。
 这两个LCD，可以接到我们核心板的外扩SPI接口上，使用SPI3控制器。
 外扩接口信号如下图：
-![外扩接口](pic/外扩接口.jpg)
+![外扩接口](pic/pic5.jpg)
 LCD的1脚接到外扩接口的1脚即可。
 
 #### 控制
@@ -107,7 +119,7 @@ void put_string_center(int x, int y, char *s, unsigned colidx)
 dev_lcd开头的函数，其实应该归类为GUI层（或者LCD panel层），而不是LCD 驱动层。
 当时为了方便，暂时放在TFT LCD源码内。现在添加了COG跟OLED驱动，要将LCD中间层的分离出来。
 函数层次应该如下：
-![层次](pic/层次.jpg)
+![层次](pic/pic6.jpg)
 因此我们将这些函数抽取出来，单独做一个dev_lcd.c的源码。
 
 #### LCD PANNEL接口跟LCD驱动连通
@@ -159,7 +171,7 @@ s32 bus_seriallcd_write_cmd(u8 cmd)
 * 显存
 
 COG 跟 OLED每个点的显示数据只用一个BIT表示。
-![](pic/显存.jpg)
+![](pic/pic7.jpg)
 如上图的说明，str7565芯片内部显存65\*132bit，我们的64\*128液晶，并没有全部用完。
 不同的液晶使用的显存不一样，要根据实际情况做**偏移**，我们的液晶从（0.0）开始，因此不需要做偏移。
 显示一个点用一个位，但是我们操作一次是写一个字节，为了操作方便，我们开辟一片**显示缓存**，用于记录当前LCD显示内容。

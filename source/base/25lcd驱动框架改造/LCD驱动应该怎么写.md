@@ -1,15 +1,25 @@
 # LCD驱动应该怎么写？
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 网络上配套STM32开发板有很多LCD例程，主要是TFT LCD跟OLED的。
@@ -41,36 +51,39 @@ TFT LCD，也就是我们常说的彩屏。
 也有一些支持SPI接口的，不过除非是比较小的屏幕，否则不建议使用SPI接口，速度慢，刷屏闪屏。
 玩STM32常用的TFT lcd屏幕驱动IC通常有：ILI9341/ILI9325等。
 2.8寸 tft lcd
-![2.8](pic/2.8tft.JPG)
+![2.8](pic/pic1.jpg)
 4寸 IPS
-![3.0](pic/4寸TFT.JPG)
+![3.0](pic/pic2.jpg)
 
 #### COG lcd
 很多人可能不知道COG LCD是什么，我觉得跟现在开发板销售方向有关系，大家都出大屏，玩酷炫界面。
 使用单片机的产品，COG LCD其实占比非常大。
 所谓的COG LCD，
+
 >COG是Chip On Glass的缩写，就是驱动芯片直接绑定在玻璃上，透明的。
 
 实物像下图：
-![cog](pic/coglcd.JPG)
+![cog](pic/pic3.jpg)
 这种LCD通常像素不高，常用的有128X64，128X32。
 一般只支持黑白显示，也有灰度屏，我没怎么用过。
 接口通常是SPI，I2C。也有号称支持8位并口的，不过基本不会用，3根IO能解决的问题，没必要用8根吧？
 常用的驱动IC：STR7565。
+
 #### OLED lcd
 买过开发板的应该基本用过。新技术，大家都感觉高档，在手环等产品常用。OLED目前屏幕较小，大一点的都很贵。
 在控制上跟COG LCD类似，区别是两者的显示方式不一样。从我们程序角度来看，最大的差别就是，OLED LCD，不用控制背光。。。。。
 实物如下图，
-![oled](pic/OLED.JPG)
+![oled](pic/pic4.jpg)
 常见的是SPI跟I2C接口。
 常见驱动IC：SSD1615。
+
 ## 硬件场景
 接下来的讨论，都基于以下硬件信息：
 1 有一个TFT屏幕，接在FSMC接口，什么型号屏幕？不知道。
 2 有一个COG LCD，接在几根IO口上，驱动IC是STR7565，128X32像素。
 3 有一个OLED LCD，接在硬件SPI3和几根IO口上，驱动IC是SSD1315，128x64像素。
 4 有一个OLED LCD，接在I2C接口上，驱动IC是SSD1315，128x64像素
-![场景](pic/场景.JPG)
+![场景](pic/pic5.jpg)
 
 ## 预备知识
 在进入讨论之前，我们先大概说一下下面几个概念，对于这些概念，如果你想深入了解，请GOOGLE。
@@ -243,8 +256,9 @@ typedef struct
 
 ## LCD驱动框架
 我们设计了如下的驱动框架
-![驱动框架](pic/LCD驱动框架设计.JPG)
+![驱动框架](pic/pic6.jpg)
 从上到下分别是：
+
 1. GUI层：如果不使用GUI，普通的划线，画圆等，也算GUI。
 2. LCD驱动层：主要是封装下一层驱动IC层的接口，以便GUI层用一套接口操作多种LCD。
 3. 驱动IC驱动层，实现不同的LCD控制，对上提供同样的接口（前面说的_lcd_drv结构体）
@@ -593,7 +607,7 @@ void dev_lcd_test(void)
 其他所有的gui操作接口都只有一个。
 这样的设计对于APP层来说，就很友好。
 显示效果
-![显示效果](pic/显示效果.JPG)
+![显示效果](pic/pic7.jpg)
 
 
 - 好处2

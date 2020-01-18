@@ -23,8 +23,9 @@ QQ群：767214262
 
 #### WAV文件头
 
-![WAV](pic/WAV格式.png)
+![WAV](pic/pic1.png)
 上图就是一个WAV文件的格式，在代码中我们如下面定义：
+
 ```c
 /*wav 文件结构*/
 typedef struct _TWavHeader
@@ -51,7 +52,7 @@ typedef struct _TWavHeader
 int 型变量占用4字节空间，short型变量占用2字节空间。
 
 我们可以通过**winhex**软件查看一个wav的格式，其中头部如下：
-![WAV](pic/WAV文件头.png)
+![WAV](pic/pic2.png)
 
 >前面4个字节就是RIFF标志。**程序中写的是0X46464952**，这是经常遇到的问题，读文件后保存到一个变量中，字节顺序是不一样的。
 

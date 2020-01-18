@@ -1,15 +1,25 @@
 # I2SEXT-WM8978-录音
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 在WM8978调试章节，我们提到过STM32的I2S_ext功能。
@@ -18,7 +28,7 @@ QQ群：767214262
 ## I2S_ext
 STM32的I2S支持全双工。如下说明。
 
-![WAV](pic/I2S全双工.png)
+![WAV](pic/pic1.png)
 
 >I2S_ext没有时钟，必须配合I2S使用。
 通常，我们用I2S做主设备，输出时钟，发送I2S数据到外部设备。
@@ -30,7 +40,7 @@ WM8978的驱动我们已经完成，现在只需要看看录音需要设置什�
 下图是8978线路图。
 WM8978支持左右声道两个MIC。板子太小，根本无法区分左右声道，因此将两个MIC连在一起。
 只使用一个MIC电路。
-![WAV](pic/WM8978线路图.png)
+![WAV](pic/pic2.png)
 
 #### 配置
 录音功能涉及到WM8978的两个模块：
@@ -44,10 +54,11 @@ MIC模块输入的是模拟信号，要通过I2S传输到STM32，需要经过ADC
 
 如下图，左边红框是MIC模块，中间红框是ADC模块。
 
-![WAV](pic/WM8978框图.JPG)
+![WAV](pic/pic3.jpg)
 
 对这两个模块的配置主要有一下：
-![WAV](pic/音频通路.png)
+![WAV](pic/pic4.png)
+
 > R45/R46、R47/R48，设置PGA增益，也就是MIC的输入增益。左边中间红框是设置增益的。
 > R44，控制MIC是否输入到PGA。左边上下两个红框处。
 > R14，配置ADC。中间红框。

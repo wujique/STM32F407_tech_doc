@@ -10,9 +10,9 @@
 
   在github上托管了教程文档。其他资料请从百度云下载。
 
-* gitee镜像：<>
+* gitee镜像：<https://gitee.com/hokgaai/STM32F407_tech_doc>
 
-* 文档同步发布在：<>
+* 文档同步发布在：<https://stm32f407-tech-doc.readthedocs.io/en/latest/>
 
 #### 百度云目录说明
 

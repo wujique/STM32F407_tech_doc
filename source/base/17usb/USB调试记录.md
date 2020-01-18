@@ -1,15 +1,25 @@
 # **USB 调试记录**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 前面有几节在讨论移植官方例程时都提到过USB例程。
@@ -34,6 +44,7 @@ Low-speed 10Kbps～100Kbps(最大1.5Mbps) 键盘、鼠标和游戏外设
 USB3.0 —— 也被认为是SuperSpeedUSB。
 实际传输速率大约是3.2Gbps（即320MB/S)。理论上的最高速率是5.0Gbps（即500MB/S）。
 USB3.0 引入全双工数据传输。5根线路中2根用来发送数据，另2根用来接收数据，还有1根是地线。
+
 ### 设备分类
 **HOST**
 主机，通常的电脑就是HOST设备。
@@ -61,6 +72,7 @@ Micro USB是USB 2.0标准的一个便携版本，在TYPE-C之前，智能手机�
 一个USB设备，使用USB线，根据USB规范通信。为了规范，还对这些设备的行为进行了分类，定义了子协议，也就区分了不同的设备。
 USB定义了种类代码信息，它被用来识别设备的功能，根据这些功能，以加载设备驱动。这种信息包含在名为基类，子类和协议的3个字节里。
 这些类，也就是我们常常听说的：HID、CDC等。
+
 |BaseClass|DescriptorUsage|Description|
 |---|---|---|
 |00h|Device|Useclass information in the Interface Descriptors|
@@ -72,14 +84,15 @@ USB定义了种类代码信息，它被用来识别设备的功能，根据这�
 STM32F407有两个USB接口：FS（全速）、HS高速。而且两个USB都是OTG接口。高速USB需要外接USB芯片。
 本次我们调试的是全速USB。
 #### USB简介
-![USB简介](pic/usb简介.png)
+![USB简介](pic/pic9.png)
 #### USB框图
-![USB框图](pic/usb框图.png)
+![USB框图](pic/pic1.png)
 
 ## ST USB 协议栈
 要熟悉一个软件，最快的速度还是**阅读官方文件**。
 下面路径可以下载STM32 USB例程，文档名称UM1021。包含一个PDF跟一个75M的例程。
 http://www.stmcu.org/document/detail/index/id-213598
+
 >CD00289278.pdf
 stm32_f105-07_f2_f4_usb-host-device_lib.zip
 
@@ -88,6 +101,7 @@ ST官方推广时，会针对某些外设进行介绍，我们可以通过这些
 http://www.stmcu.org/document/list/index/category-466
 ![STM MCU 资料](pic/3.png)
 我们可以找到2012年USB的培训资料
+
 >USB培训_Part1_协议.pdf
 USB培训_Part2_USB_IP及其库的使用.pdf
 USB培训_Part3_USB_OTG_IP及其库的使用.pdf
@@ -102,6 +116,7 @@ USB培训_Part3_USB_OTG_IP及其库的使用.pdf
 官方例程文件结构
 ![USB例程文件结构](pic/4.png)
 其中
+
 >Libraries中，有3个USB库，分别是Device、HOST、OTG。
 Project目录下有3种例程，分别对应Device、HOST、Host_Device。
 
@@ -267,6 +282,7 @@ static void USB_OTG_BSP_TimeInit ( void )
 接口使用Micro接口，电气信号如下图
 ![USB 电气信号](pic/2.png)
 5根信号线
+
 |信号|定义说明|
 |---|---|
 |Vbus|电源，5V，2.0协议允许500毫安电流。3.0则要求1A。当作为HOST设备时，对外供电|
@@ -278,9 +294,9 @@ static void USB_OTG_BSP_TimeInit ( void )
 #### OTG供电逻辑
 我们的核心板只提供了一个micro USB插座，HOST或DEVICE都是通过这个座子连接。
 供电电路如下：
-![HOST供电](pic/HOST供电.JPG)
+![HOST供电](pic/pic2.jpg)
 
-![DEVICE供电](pic/DEVICE供电.JPG)
+![DEVICE供电](pic/pic3.jpg)
 接U盘，STM32作为HOST，otg_fs_power_switch输出低电平，升压得到的5V通过U901输出，供电给U盘，同时Q903 MOS管关断，防止USB_FS_VBUS反向倒灌到系统5V电源。
 接电脑，STM32作为DEVICE，otg_fs_power_switch转输入或者高阻态，U901关断，Q903导通，USB_FS_VBUS供电给核心板使用。电路没加保险丝，当LCD，摄像头等都接上时，电流会大于500ma，直接接电脑可能会过流，建议通过带电源的HUB接到电脑。
 
@@ -303,15 +319,15 @@ STM32_USB-Host-Device_Lib_V2.2.0\Project\USB_Host_Device_Examples\DRD
 
 3 在MDK工程中建立USB文件组织结构并添加对应文件
 在MDK中我们将文件如下组织
-![MDK工程文件组织方式](pic/mdk工程.jpg)
+![MDK工程文件组织方式](pic/pic4.jpg)
 
 4 在我们MDK工程app目录下，建立usb目录，并将例程目录Project\USB_Host_Device_Examples\DRD下的inc跟src文件夹拷贝过来。
 inc目录有以下文件,第一个文件和usb开头的文件是我们需要的，其他文件在前面例程已经添加，没有什么差异就删除。
-![USB DRD INC](pic/DRD例程INC.jpg)
+![USB DRD INC](pic/pic5.jpg)
 
 SRC目录有以下文件，main.c跟stm32fxxx_it.c的代码需要移植。
 其他文件拷贝到usb_app目录
-![USB DRD SRC](pic/DRD例程SRC.jpg)
+![USB DRD SRC](pic/pic6.jpg)
 
 main.c很简单，主要代码都在dual_func_demo.c
 stm32fxxx_it.c有三个中断函数需要处理，移植到我们自己的stm32fxxx_it.c
@@ -320,8 +336,11 @@ TIM2_IRQHandler不知道用来做什么，估计是超时管理，细节回头�
 OTG_FS_IRQHandler是USB的主要中断。
 
 5 将相关文件添加到MDK工程
-![添加文件到工程](pic/MKD工程文件1.JPG)
-![添加文件到工程](pic/MKD工程文件2.JPG)
+![添加文件到工程](pic/pic7.jpg)
+
+core和fatfs
+
+![添加文件到工程](pic/pic8.jpg)
 记得添加头文件路径。
 
 6 查看app\usb\inc下的文件，根据实际情况配置。

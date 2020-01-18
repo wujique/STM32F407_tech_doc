@@ -1,15 +1,25 @@
 # **can总线调试记录**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 本节将向大家介绍如何使用STM32F4自带的CAN控制器实现两个开发板之间的CAN通信。
@@ -34,7 +44,8 @@ CAN总线特点：(1) 数据通信没有主从之分，任意一个节点可以�
 
 #### 通信
 典型的CAN通信网络如下图。
-![图片](pic/can网络.png)
+![图片](pic/pic1.png)
+
 >所有CAN节点通过CANH和CANL连接到CAN网络上。
 前面我们学习串口的时候知道，串口是发送和接收交叉相连。
 CAN节点并没有所谓的发送和接收，所有的CAN节点，都是CANH与CANH相连，CANL与CANL相连。
@@ -47,7 +58,7 @@ CAN节点并没有所谓的发送和接收，所有的CAN节点，都是CANH与C
 当CANH等于CANL，电平都是2.3V，叫做隐性电平。
 当CANH为高电平，CANL为低电平时（两者之差大于0.9V），叫做显性电平。
 按照规定，隐性代表逻辑1，显性代表逻辑0。
-![图片](pic/can时序.png)
+![图片](pic/pic2.png)
 
 电平说清楚了，但是这个没有接收发送管脚，如何通信呢？
 
@@ -76,7 +87,7 @@ CAN总线的硬件芯片提供了一种叫做**本地过滤**的功能，通过�
 * 帧类型
 
 CAN协议有以下4中帧：
-![图片](pic/帧类型.png)
+![图片](pic/pic3.png)
 
 >**更信息规范请查阅资料中的<CAN BUS规范v2.0+中文版.pdf>**
 
@@ -84,15 +95,15 @@ CAN协议有以下4中帧：
 STM32带的CAN控制器叫**基本扩展CAN外设**，又称bxCAN。支持2.0A和B版本协议。
 
 #### 特性
-![图片](pic/特性.png)
+![图片](pic/pic4.png)
 
-![图片](pic/STM32CAN网络.png)
+![图片](pic/pic5.png)
 上图是CAN的应用拓扑结构。
 红框1里面是CAN芯片，也就是我们的VP230芯片。
 红框2就是STM32芯片的CAN控制器。
 
 #### 框图
-![图片](pic/框图.png)
+![图片](pic/pic6.png)
 >STM32有两个CAN，CAN1做主bxCAN，can2做从bxCAN。
 
 #### 过滤器
@@ -162,13 +173,14 @@ typedef struct
 
 >这四个值，对应过滤器的2个32位寄存器：CAN_FxR1、CAN_FxR2
 >1. 如果CAN_FilterScale是16位：
-那么CAN_FilterMaskIdLow<<16+CAN_FilterIdLow设置到CAN_FR1。
-CAN_FilterMaskIdHigh<<16+CAN_FilterIdHigh设置到CAN_FR2。
+>那么CAN_FilterMaskIdLow<<16+CAN_FilterIdLow设置到CAN_FR1。
+>CAN_FilterMaskIdHigh<<16+CAN_FilterIdHigh设置到CAN_FR2。
 >2. 如果CAN_FilterScale是32位：
-CAN_FilterMaskIdHigh<<16 + CAN_FilterMaskIdLow 设置到CAN_FR2。
-CAN_FilterIdHigh<<16 + CAN_FilterIdLow 设置到CAN_FR1
---
->查看设置函数可见上述细节
+>  CAN_FilterMaskIdHigh<<16 + CAN_FilterMaskIdLow 设置到CAN_FR2。
+>
+>  CAN_FilterIdHigh<<16 + CAN_FilterIdLow 设置到CAN_FR1
+>
+>  查看设置函数可见上述细节
 >```c
 >void CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct)
 >```
@@ -193,7 +205,7 @@ VP230是SN65HVD230DR的俗称，是一款TI出的CAN芯片。
 我们选用这块芯片的原因是：**工作电压3.3V，且可以和常用的5V CAN芯片TJA1050通信**。
 
 ## 原理图
-![原理图](pic/原理图.jpg)
+![原理图](pic/pic7.jpg)
 
 ## 移植官方例程
 官方CAN例程有两个:CAN_LoopBack(回环测试);CAN_Networking(组网模式)。
@@ -202,7 +214,7 @@ VP230是SN65HVD230DR的俗称，是一款TI出的CAN芯片。
 
 #### 例程分析
 在CAN例程内，并没有任何CAN相关的文件。
-![图片](pic/例程文件.png)
+![图片](pic/pic8.png)
 
 查看main.c，CAN_Config配置CAN后，进入while循环。
 循环中如果判断到按键按下，在else分支就会将键值赋值到发送消息。

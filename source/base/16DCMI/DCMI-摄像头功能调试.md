@@ -1,15 +1,25 @@
 # **DCMI-摄像头功能调试**
 >**够用的硬件**
-**能用的代码**
-**实用的教程**
+>
+>**能用的代码**
+>
+>**实用的教程**
+>
 >屋脊雀工作室编撰 -20190101
-愿景：做一套能用的开源嵌入式驱动（非LINUX）
-官网：www.wujique.com
-github: https://github.com/wujique/stm32f407
-淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
-技术支持邮箱：code@wujique.com、github@wujique.com
-资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
-QQ群：767214262
+>
+>愿景：做一套能用的开源嵌入式驱动（非LINUX）
+>
+>官网：www.wujique.com
+>
+>github: https://github.com/wujique/stm32f407
+>
+>淘宝：https://shop316863092.taobao.com/?spm=2013.1.1000126.2.3a8f4e6eb3rBdf
+>
+>技术支持邮箱：code@wujique.com、github@wujique.com
+>
+>资料下载：https://pan.baidu.com/s/12o0Vh4Tv4z_O8qh49JwLjg
+>
+>QQ群：767214262
 ---
 
 STM32F407芯片带有DCMI接口，在我们的核心板上已经将接口用18PIN的FPC座子引出。
@@ -25,15 +35,15 @@ DCMI数字摄像头接口是一个同步并行接口，能接收外部8位、10�
 此接口适用于黑白摄像头、X24和X5摄像头，并假定所有预处理（如调整大小）都在摄像头中执行。
 
 #### 特性
-![DCMI特性](pic/DCMI特性.jpg)
+![DCMI特性](pic/pic1.jpg)
 
 #### 引脚
 数据输入一共有14根引脚。
-![DCMI引脚](pic/DCMI引脚.jpg)
+![DCMI引脚](pic/pic2.jpg)
 
 #### DCMI框图
 从框图可见，DCMI支持DMA传输。
-![DCMI框图](pic/DCMI框图.jpg)
+![DCMI框图](pic/pic3.jpg)
 
 ## OV2640
 OV2640 是 OV（OmniVision）公司生产的一颗 1/4 寸的 CMOS UXGA（1632*1232）图像传感器。该传感器体积小、工作电压低，提供单片 UXGA 摄像头和影像处理器的所有功能。通过 SCCB 总线控制，可以输出整帧、子采样、缩放和取窗口等方式的各种分辨率 8/10 位影像数据。该产品 UXGA 图像最高达到 15 帧/秒（SVGA 可达 30 帧， CIF 可达 60 帧）。用户可以完全控制图像质量、数据格式和传输方式。所有图像处理功能过程包括伽玛曲线、白平衡、对比度、色度等都可以通过 SCCB 接口编程。 OmmiVision 图像传感器应用独有的传感器技术，通过减少或消除光学或电子缺陷如固定图案噪声、拖尾、浮散等，提高图像质量，得到清晰的稳定的彩色图像。
@@ -84,7 +94,7 @@ DSP输出图像的尺寸。
 OV2640设置不简单，文档也复杂，我们使用OV260，其实是将ST官方的例程移植到我们的硬件上而已。
 
 ## 接口原理图
-![DCMI接口](pic/接口图.jpg)
+![DCMI接口](pic/pic4.jpg)
 
 >1. SCL和SDA是摄像头控制信号，接到CPU硬件I2C上，不使用模拟I2C
 >2. RESET和PWDN信号是摄像头复位和上电信号，可以不接。
